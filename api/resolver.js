@@ -9,6 +9,5 @@ module.exports = function(req, res) {
   var html = "<img src="+data.src+">";
   res.json({
     body: html
-    // Add raw:true if you're returning content that you want the user to be able to edit
   });
 };

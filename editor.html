@@ -48,14 +48,15 @@ function init() {
     var paramString = window.location.search;
     var searchParams = new URLSearchParams(paramString);
     var data = JSON.parse(searchParams.get("data"));
-    var dataURL = data["src"];
-
-    // load it into the canvas
-    var img = new Image();
-    img.onload = function() {
-        ctx.drawImage(this, 0, 0);
+    if(data) {
+        var dataURL = data["src"];
+        // load it into the canvas
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(this, 0, 0);
+        }
+        img.src = dataURL;
     }
-    img.src = dataURL;
 }
 
 function color(obj) {
@@ -88,6 +89,10 @@ function erase() {
 function save() {
     // call done and pass it the image url of the canvas
     Mixmax.done({src: canvas.toDataURL()});
+}
+
+function load() {
+    alert("test");
 }
 
 function width(line) {
@@ -128,6 +133,25 @@ function findxy(res, e) {
         }
     }
 }
+
+// load an image into the canvas
+function handleFiles(files) {
+    canvas = document.getElementById('can');
+    ctx = canvas.getContext("2d");
+    file = files[0];
+    var reader = new FileReader();
+    reader.onload = function() {
+        var dataURL = reader.result;
+        // load it into the canvas
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(this, 0, 0);
+        }
+        img.src = dataURL;
+    }
+    reader.readAsDataURL(file);
+}
+
     </script>
     <body onload="init()">
         <div class="container"  style="display:table; width:100%; margin: 0;">
@@ -164,8 +188,11 @@ function findxy(res, e) {
         </div>
         <div class="container navbar-static-bottom footer">
             <div class="btn-group">
-                <button type="button" id="#000000" class="btn btn-primary" onclick="save(this)">Save</button>
-                <button type="button" id="#ffffff" class="btn btn-primary" onclick="erase(this)">Erase</button>
+                <button type="button" id="#000000" class="btn btn-default" onclick="save(this)">Save</button>
+                <button type="button" id="#ffffff" class="btn btn-default" onclick="erase(this)">Erase</button>
+                <label class="btn btn-default btn-file">
+                        Choose Image <input type="file" id="input" style="display: none;" onchange="handleFiles(this.files)">
+                </label>
             </div>
         </div>
     </body>

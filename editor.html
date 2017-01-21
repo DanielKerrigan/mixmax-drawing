@@ -1,175 +1,172 @@
 <!doctype html>
 <html>
     <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge">
-      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-      <title>Mixmax &middot; z</title>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+        <title>Mixmax &middot; z</title>
 
-      <!-- Mixmax SDK -->
-      <script defer src="https://d1xa36cy0xt122.cloudfront.net/v1/Mixmax.js"></script>
-      <meta name="viewport" content="width=device-width, initial-scale=1">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-      <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+        <!-- Mixmax SDK -->
+        <script defer src="https://d1xa36cy0xt122.cloudfront.net/v1/Mixmax.js"></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
     </head>
     <script type="text/javascript">
-    var canvas, ctx, flag = false,
-        prevX = 0,
-        currX = 0,
-        prevY = 0,
-        currY = 0,
-        dot_flag = false;
+var canvas, ctx, flag = false,
+    prevX = 0,
+    currX = 0,
+    prevY = 0,
+    currY = 0,
+    dot_flag = false;
 
-    var x = "black",
-        y = 2;
+var x = "black",
+    y = 2;
 
-    function init() {
-        canvas = document.getElementById('can');
-        ctx = canvas.getContext("2d");
-        w = canvas.width;
-        h = canvas.height;
+function init() {
+    canvas = document.getElementById('can');
+    ctx = canvas.getContext("2d");
+    w = canvas.width;
+    h = canvas.height;
 
-        canvas.addEventListener("mousemove", function (e) {
-            findxy('move', e)
-        }, false);
-        canvas.addEventListener("mousedown", function (e) {
-            findxy('down', e)
-        }, false);
-        canvas.addEventListener("mouseup", function (e) {
-            findxy('up', e)
-        }, false);
-        canvas.addEventListener("mouseout", function (e) {
-            findxy('out', e)
-        }, false);
+    canvas.addEventListener("mousemove", function (e) {
+        findxy('move', e)
+    }, false);
+    canvas.addEventListener("mousedown", function (e) {
+        findxy('down', e)
+    }, false);
+    canvas.addEventListener("mouseup", function (e) {
+        findxy('up', e)
+    }, false);
+    canvas.addEventListener("mouseout", function (e) {
+        findxy('out', e)
+    }, false);
 
-        // get the dataURL from the URL
-        var paramString = window.location.search;
-        var searchParams = new URLSearchParams(paramString);
-        var data = JSON.parse(searchParams.get("data"));
-        var dataURL = data["src"];
+    // get the dataURL from the URL
+    var paramString = window.location.search;
+    var searchParams = new URLSearchParams(paramString);
+    var data = JSON.parse(searchParams.get("data"));
+    var dataURL = data["src"];
 
-        // load it into the canvas
-        var img = new Image();
-        img.onload = function() {
-            ctx.drawImage(this, 0, 0);
-        }
-        img.src = dataURL;
+    // load it into the canvas
+    var img = new Image();
+    img.onload = function() {
+        ctx.drawImage(this, 0, 0);
     }
+    img.src = dataURL;
+}
 
-    function color(obj) {
-        x = obj.id;
-        if (x == "#ffffff") y = 14;
-        else y = 2;
-    }
+function color(obj) {
+    x = obj.id;
+    if (x == "#ffffff") y = 14;
+    else y = 2;
+}
 
-    function draw() {
-        ctx.beginPath();
-        ctx.moveTo(prevX, prevY);
-        ctx.lineTo(currX, currY);
-        ctx.strokeStyle = x;
-        ctx.lineWidth = y;
-        for (var i=0;i<=y;i++){
-          ctx.arc(currX, currY, i, 0, 2*Math.PI);
-          ctx.stroke();
-        }
+function draw() {
+    ctx.beginPath();
+    ctx.moveTo(prevX, prevY);
+    ctx.lineTo(currX, currY);
+    ctx.strokeStyle = x;
+    ctx.lineWidth = y;
+    for (var i=0;i<=y;i++){
+        ctx.arc(currX, currY, i, 0, 2*Math.PI);
         ctx.stroke();
-        ctx.closePath();
     }
+    ctx.stroke();
+    ctx.closePath();
+}
 
-    function erase() {
-        var m = confirm("Want to clear");
-        if (m) {
-            ctx.clearRect(0, 0, w, h);
-            document.getElementById("canvasimg").style.display = "none";
+function erase() {
+    var m = confirm("Clear?");
+    if (m) {
+        ctx.clearRect(0, 0, w, h);
+    }
+}
+
+function save() {
+    // call done and pass it the image url of the canvas
+    Mixmax.done({src: canvas.toDataURL()});
+}
+
+function width(line) {
+    y = parseInt(line.id);
+}
+
+function findxy(res, e) {
+    if (res == 'down') {
+        prevX = currX;
+        prevY = currY;
+        currX = e.clientX - canvas.offsetLeft;
+        currY = e.clientY - canvas.offsetTop;
+
+        flag = true;
+        dot_flag = true;
+        if (dot_flag) {
+            ctx.beginPath();
+            ctx.fillStyle = x;
+            console.log(y)
+                for (var i=0;i<=y;i++){
+                    ctx.arc(currX, currY, i, 0, 2*Math.PI);
+                    ctx.stroke();
+                }
+            ctx.closePath();
+            dot_flag = false;
         }
     }
-
-    function save() {
-        // call done and pass it the image url of the canvas
-        Mixmax.done({src: canvas.toDataURL()});
+    if (res == 'up' || res == "out") {
+        flag = false;
     }
-
-    function width(line) {
-      y = parseInt(line.id);
-    }
-
-    function findxy(res, e) {
-        if (res == 'down') {
+    if (res == 'move') {
+        if (flag) {
             prevX = currX;
             prevY = currY;
             currX = e.clientX - canvas.offsetLeft;
             currY = e.clientY - canvas.offsetTop;
-
-            flag = true;
-            dot_flag = true;
-            if (dot_flag) {
-                ctx.beginPath();
-                ctx.fillStyle = x;
-                console.log(y)
-                for (var i=0;i<=y;i++){
-                  ctx.arc(currX, currY, i, 0, 2*Math.PI);
-                  ctx.stroke();
-                }
-                ctx.closePath();
-                dot_flag = false;
-            }
-        }
-        if (res == 'up' || res == "out") {
-            flag = false;
-        }
-        if (res == 'move') {
-            if (flag) {
-                prevX = currX;
-                prevY = currY;
-                currX = e.clientX - canvas.offsetLeft;
-                currY = e.clientY - canvas.offsetTop;
-                draw();
-            }
+            draw();
         }
     }
+}
     </script>
     <body onload="init()">
-      <div class="container"  style="display:table; width:100%; margin: 0;">
-        <div class="btn-group btn-block">
-
-        <div id="container" style="padding:5px 0px 0px 0px;">
-        <div id="red" onclick="color(this)"style="background:red; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="pink" onclick="color(this)" style="background:pink; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="fuchsia" onclick="color(this)" style="background:fuchsia; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="orange" onclick="color(this)" style="background:orange; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="yellow" onclick="color(this)" style="background:yellow; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="lime" onclick="color(this)" style="background:lime; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="green" onclick="color(this)" style="background:green; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="blue" onclick="color(this)" style="background:blue; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="purple" onclick="color(this)" style="background:purple; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-        <div id="black" onclick="color(this)" style="background:black; width:50px; height:50px; 
-        float:left; border: 1px;"></div>
-        <div style="clear: both;"></div> 
-        <div id="white" onclick="color(this)" style="background:white; width:50px; height:50px; float:left;"></div>
-        <div style="clear: both;"></div> 
-
+        <div class="container"  style="display:table; width:100%; margin: 0;">
+            <div class="btn-group btn-block">
+                <div id="colors" style="padding:5px 0px 0px 0px;">
+                    <div id="red" onclick="color(this)" style="background:red; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="pink" onclick="color(this)" style="background:pink; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="fuchsia" onclick="color(this)" style="background:fuchsia; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="orange" onclick="color(this)" style="background:orange; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="yellow" onclick="color(this)" style="background:yellow; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="lime" onclick="color(this)" style="background:lime; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="green" onclick="color(this)" style="background:green; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="blue" onclick="color(this)" style="background:blue; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="purple" onclick="color(this)" style="background:purple; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="black" onclick="color(this)" style="background:black; width:50px; height:50px;
+                    float:left; border: 1px;"></div>
+                    <div style="clear: both;"></div>
+                    <div id="white" onclick="color(this)" style="background:white; width:50px; height:50px; float:left;"></div>
+                    <div style="clear: both;"></div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="container">
-        <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-        <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
-      </div>
+        <div class="container">
+            <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
+        </div>
         <div class="container navbar-static-bottom footer">
-          <div class="btn-group">
-            <button type="button" id="#000000" class="btn btn-primary" onclick="save(this)">Save</button>
-            <button type="button" id="#ffffff" class="btn btn-primary" onclick="erase(this)">Erase</button>
-          </div>
+            <div class="btn-group">
+                <button type="button" id="#000000" class="btn btn-primary" onclick="save(this)">Save</button>
+                <button type="button" id="#ffffff" class="btn btn-primary" onclick="erase(this)">Erase</button>
+            </div>
         </div>
     </body>
-    </html>
+</html>

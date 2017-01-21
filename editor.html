@@ -1,241 +1,143 @@
-<html style="background-color: #0a0f14">
-<head>
-  <meta charset="utf-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-  <title>Mixmax &middot; Drawing</title>
+<!doctype html>
+<html>
+    <head>
+      <meta charset="utf-8">
+      <meta http-equiv="X-UA-Compatible" content="IE=edge">
+      <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+      <title>Mixmax &middot; z</title>
 
-  <!-- Mixmax SDK -->
-  <script defer src="https://d1xa36cy0xt122.cloudfront.net/v1/Mixmax.js"></script>
+      <!-- Mixmax SDK -->
+      <script defer src="https://d1xa36cy0xt122.cloudfront.net/v1/Mixmax.js"></script>
 
-  <link rel="stylesheet" href="/styles.css">
-  <link href='//fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic,900,900italic,300italic,300' rel='stylesheet' type='text/css'>
-  <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.2/underscore-min.js"></script>
-  <script src="//cdnjs.cloudflare.com/ajax/libs/backbone.js/1.1.2/backbone-min.js"></script>
-  <script src="/lib/masonry.js"></script>
-</head>
+      <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    </head>
+    <script type="text/javascript">
+    var canvas, ctx, flag = false,
+        prevX = 0,
+        currX = 0,
+        prevY = 0,
+        currY = 0,
+        dot_flag = false;
 
-<body data-current-theme="gmail">
-<div class="app-popup  app-giphy">
-<div class="toolbar  text--reverse  text--caps  toolbar--app  ui-face  flexbox">
-  <div class="toolbar__title  flex-fill">
-    <form class="search">
-      <input class="search-field  js-giphy-search"  autofocus  type="text" placeholder="Search giphy" value="">
-      <button type="submit" class="js-search-gifs  btn  btn--pill  text--caps  search-button"><i class="fa fa-search"></i></button>
-    </form>
-  </div>
-  <div class="giphy-branding">
-    <img src="/img/giphy.gif" width="240">
-  </div>
-</div>
-<div class="js-image-gallery  image-gallery  softest">
-  <div class="js-image-results  image-results">
-  </div>
-  <ul class="spinner-bokeh  hidden">
-    <li></li>
-    <li></li>
-    <li></li>
-    <li></li>
-  </ul>
-</div>
-</div>
-<script>
-  var GiphyEditor = Backbone.View.extend({
-    // The current XHR search request.
-    _currentXhr: null,
+    var x = "black",
+        y = 2;
 
-    _currentImages: null,
+    function init() {
+        canvas = document.getElementById('can');
+        ctx = canvas.getContext("2d");
+        w = canvas.width;
+        h = canvas.height;
 
-    // This is the public API key from https://github.com/giphy/GiphyAPI. Replace with yours!
-    _apiKey: 'dc6zaTOxFJmzC',
-
-    events: {
-      'click .js-gif': '_done',
-      'click .js-search-gifs': '_search',
-      'submit .js-search-gifs': '_search',
-      'mouseenter .js-gif': '_play',
-      'mouseleave .js-gif': '_pause'
-    },
-
-    render: function() {
-      var self = this,
-          body = document.body,
-          gallery = $('.js-image-results'),
-          timer;
-
-      this._currentImages = [];
-
-      // Show loading spinner
-      $('.spinner-bokeh').removeClass('hidden');
-
-      // Disable pointer events while scrolling to improve performance.
-      $(window).on('scroll', function() {
-        clearTimeout(timer);
-        if(!body.classList.contains('disable-hover')) {
-          body.classList.add('disable-hover')
-        }
-
-        timer = setTimeout(function(){
-          body.classList.remove('disable-hover')
-        },300);
-      }, false);
-
-      gallery.masonry({
-        itemSelector: 'figure',
-        columnWidth:  function() {
-          return gallery.width() / 3;
-        }
-      });
-
-      this._currentXhr = $.ajax({
-        url:'https://api.giphy.com/v1/gifs/trending?api_key=' + this._apiKey + '&limit=100',
-        success:function(result){
-          if (result.data.length > 0) {
-            $(result.data).each(function(index, result) {
-              var gifStillUrl = result.images.downsized_still.url;
-              var gifAnimatedUrl = result.images.downsized.url;
-              var gifAnimatedFullUrl = result.images.original.url;
-              var gifAnimatedFullWidth = result.images.original.width;
-              self._loadImage(gifStillUrl, gifAnimatedUrl, gifAnimatedFullUrl, gifAnimatedFullWidth, gallery);
-            });
-          }
-        }
-      });
-    },
-
-    _done: function(e) {
-      var target = $(e.target);
-      var gif = target.attr('data-gif-animated-full');
-      var width = target.attr('data-gif-animated-full-width');
-
-      // Let Mixmax know it was done.
-      Mixmax.done({
-        src: gif,
-        width: width
-      });
-    },
-
-    _cancel: function() {
-      Mixmax.cancel();
-    },
-
-    _search: function(e) {
-      e.preventDefault();
-
-      var self = this,
-          term = $('.js-giphy-search').val(),
-          gallery = $('.js-image-results');
-
-      // Cancel last Ajax request
-      if (this._currentXhr) this._currentXhr.abort();
-
-      // Clear images any images currently loading
-      if (this._currentImages) {
-        var currentImages = $(this._currentImages);
-
-        currentImages.each(function(index, image){
-          image.src = '';
-          image.onload = null;
-        });
-
-        currentImages = [];
-      }
-
-      $('.spinner-bokeh').removeClass('hidden');
-      $('.js-no-results').remove();
-
-      gallery.empty().masonry().masonry('remove', gallery.find('.js-gif'));
-      gallery.masonry().masonry('destroy');
-      gallery.masonry({
-        itemSelector: 'figure',
-        columnWidth:  function() {
-          return gallery.width() / 3;
-        }
-      });
-
-      this._currentXhr = $.ajax({
-        url:'https://api.giphy.com/v1/gifs/search?q=' + encodeURIComponent(term) + '&api_key=' + this._apiKey + '&limit=100',
-        success:function(result){
-          if (result.data.length > 0) {
-            $(result.data).each(function(index, result) {
-              var gifStillUrl = result.images.downsized_still.url;
-              var gifAnimatedUrl = result.images.downsized.url;
-              var gifAnimatedFullUrl = result.images.original.url;
-              var gifAnimatedFullWidth = result.images.original.width;
-              self._loadImage(gifStillUrl, gifAnimatedUrl, gifAnimatedFullUrl, gifAnimatedFullWidth, gallery);
-            });
-          } else {
-            $('.spinner-bokeh').addClass('hidden');
-            var phrase = term.length == 0 ? 'for you' : 'for <strong>&ldquo;' + term + '&rdquo;</strong>'
-            var noResultsHTML = $('<div class="js-no-results  text--reverse   m++  p++">'
-              + '<h2 class="text--normal  mb++">We couldn&rsquo;t find any results ' + phrase + ', but we did find Taylor&nbsp;Lautner.</h2>'
-              + '<img src="' + Environment.getRootUrl() +'/img/giphy/taylor.gif"></div>');
-            noResultsHTML.hide();
-            gallery.append(noResultsHTML);
-            noResultsHTML.fadeIn(150);
-          }
-        }
-      });
-    },
-
-    _loadImage: function(gifStillUrl, gifAnimatedUrl, gifAnimatedFullUrl, gifAnimatedFullWidth, container){
-      var imgStill = new Image();
-      var imgAnimated = new Image();
-      var el = $('<figure><img '
-          + 'data-gif-animated="' + gifAnimatedUrl + '" '
-          + 'data-gif-animated-full="' + gifAnimatedFullUrl + '" '
-          + 'data-gif-animated-full-width="' + gifAnimatedFullWidth + '" '
-          + 'class="js-gif" src="' + gifStillUrl + '"></figure>');
-      el.hide();
-      container.append(el);
-
-      imgStill.onload = function(){
-        imgStill.loaded = true;
-        loadIfDone();
-      };
-
-      imgAnimated.onload = function(){
-        imgAnimated.loaded = true;
-        loadIfDone();
-      };
-
-      imgStill.src = gifStillUrl;
-      imgAnimated.src = gifAnimatedUrl;
-      this._currentImages.push(imgStill, imgAnimated);
-
-      function loadIfDone(){
-        if (!imgStill.loaded || !imgAnimated.loaded) return;
-        container.masonry( 'appended', el ).fadeIn();
-        el.fadeIn(200);
-        $('.spinner-bokeh').addClass('hidden');
-      }
-    },
-
-    _play: function(e) {
-      var target = $(e.target);
-      var gifStill = target.attr('src');
-      var gifAnimated = target.data('gifAnimated');
-
-      target.attr('src', gifAnimated);
-      target.data('gifStill', gifStill);
-    },
-
-    _pause: function(e) {
-      var target = $(e.target);
-      var gifStill = target.data('gifStill');
-      var gifAnimated = target.attr('src');
-
-      target.attr('src', gifStill);
-      target.data('gifAnimated', gifAnimated);
+        canvas.addEventListener("mousemove", function (e) {
+            findxy('move', e)
+        }, false);
+        canvas.addEventListener("mousedown", function (e) {
+            findxy('down', e)
+        }, false);
+        canvas.addEventListener("mouseup", function (e) {
+            findxy('up', e)
+        }, false);
+        canvas.addEventListener("mouseout", function (e) {
+            findxy('out', e)
+        }, false);
     }
-  });
 
-  // Create
-  new GiphyEditor({
-    el: document.body
-  }).render();
+    function color(obj) {
+        switch (obj.id) {
+            case "green":
+                x = "green";
+                break;
+            case "blue":
+                x = "blue";
+                break;
+            case "red":
+                x = "red";
+                break;
+            case "yellow":
+                x = "yellow";
+                break;
+            case "orange":
+                x = "orange";
+                break;
+            case "black":
+                x = "black";
+                break;
+            case "white":
+                x = "white";
+                break;
+        }
+        if (x == "white") y = 14;
+        else y = 2;
 
-</script>
-</body>
-</html>
+    }
+
+    function draw() {
+        ctx.beginPath();
+        ctx.moveTo(prevX, prevY);
+        ctx.lineTo(currX, currY);
+        ctx.strokeStyle = x;
+        ctx.lineWidth = y;
+        ctx.stroke();
+        ctx.closePath();
+    }
+
+    function erase() {
+        var m = confirm("Want to clear");
+        if (m) {
+            ctx.clearRect(0, 0, w, h);
+            document.getElementById("canvasimg").style.display = "none";
+        }
+    }
+
+    function save() {
+        // call done and pass it the image url of the canvas
+        Mixmax.done({src: canvas.toDataURL()});
+    }
+
+    function findxy(res, e) {
+        if (res == 'down') {
+            prevX = currX;
+            prevY = currY;
+            currX = e.clientX - canvas.offsetLeft;
+            currY = e.clientY - canvas.offsetTop;
+
+            flag = true;
+            dot_flag = true;
+            if (dot_flag) {
+                ctx.beginPath();
+                ctx.fillStyle = x;
+                ctx.fillRect(currX, currY, 2, 2);
+                ctx.closePath();
+                dot_flag = false;
+            }
+        }
+        if (res == 'up' || res == "out") {
+            flag = false;
+        }
+        if (res == 'move') {
+            if (flag) {
+                prevX = currX;
+                prevY = currY;
+                currX = e.clientX - canvas.offsetLeft;
+                currY = e.clientY - canvas.offsetTop;
+                draw();
+            }
+        }
+    }
+    </script>
+    <body onload="init()">
+        <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
+        <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
+        <div style="position:absolute;top:15%;left:45%;width:10px;height:10px;background:green;" id="green" onclick="color(this)"></div>
+        <div style="position:absolute;top:15%;left:46%;width:10px;height:10px;background:blue;" id="blue" onclick="color(this)"></div>
+        <div style="position:absolute;top:15%;left:47%;width:10px;height:10px;background:red;" id="red" onclick="color(this)"></div>
+        <div style="position:absolute;top:17%;left:45%;width:10px;height:10px;background:yellow;" id="yellow" onclick="color(this)"></div>
+        <div style="position:absolute;top:17%;left:46%;width:10px;height:10px;background:orange;" id="orange" onclick="color(this)"></div>
+        <div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:black;" id="black" onclick="color(this)"></div>
+        <div style="position:absolute;top:20%;left:43%;">Eraser</div>
+        <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;" id="white" onclick="color(this)"></div>
+        <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
+        <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:55%;left:10%;">
+        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;">
+    </body>
+    </html>

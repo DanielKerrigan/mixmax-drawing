@@ -43,6 +43,19 @@
         canvas.addEventListener("mouseout", function (e) {
             findxy('out', e)
         }, false);
+
+        // get the dataURL from the URL
+        var paramString = window.location.search;
+        var searchParams = new URLSearchParams(paramString);
+        var data = JSON.parse(searchParams.get("data"));
+        var dataURL = data["src"];
+
+        // load it into the canvas
+        var img = new Image();
+        img.onload = function() {
+            ctx.drawImage(this, 0, 0);
+        }
+        img.src = dataURL;
     }
 
     function color(obj) {

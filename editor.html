@@ -8,7 +8,10 @@
 
       <!-- Mixmax SDK -->
       <script defer src="https://d1xa36cy0xt122.cloudfront.net/v1/Mixmax.js"></script>
-
+      <meta name="viewport" content="width=device-width, initial-scale=1">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+      <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
       <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
     </head>
     <script type="text/javascript">
@@ -43,30 +46,8 @@
     }
 
     function color(obj) {
-        switch (obj.id) {
-            case "green":
-                x = "green";
-                break;
-            case "blue":
-                x = "blue";
-                break;
-            case "red":
-                x = "red";
-                break;
-            case "yellow":
-                x = "yellow";
-                break;
-            case "orange":
-                x = "orange";
-                break;
-            case "black":
-                x = "black";
-                break;
-            case "white":
-                x = "white";
-                break;
-        }
-        if (x == "white") y = 14;
+        x = obj.id;
+        if (x == "#ffffff") y = 14;
         else y = 2;
 
     }
@@ -94,6 +75,10 @@
         Mixmax.done({src: canvas.toDataURL()});
     }
 
+    function width(line) {
+      y = parseInt(line.id);
+    }
+
     function findxy(res, e) {
         if (res == 'down') {
             prevX = currX;
@@ -106,7 +91,8 @@
             if (dot_flag) {
                 ctx.beginPath();
                 ctx.fillStyle = x;
-                ctx.fillRect(currX, currY, 2, 2);
+                console.log(y)
+                ctx.fillRect(currX, currY, y, y);
                 ctx.closePath();
                 dot_flag = false;
             }
@@ -126,18 +112,30 @@
     }
     </script>
     <body onload="init()">
+      <div class="container"  style="display:table; width:100%; margin: 0;">
+        <div class="btn-group btn-block">
+          <button type="button" id="#008000" class="btn btn-primary" onclick="color(this)">Green</button>
+          <button type="button" id="#0000ff" class="btn btn-primary" onclick="color(this)">Blue</button>
+          <button type="button" id="#ff0000" class="btn btn-primary" onclick="color(this)">Red</button>
+          <button type="button" id="#ffff00" class="btn btn-primary" onclick="color(this)">Yellow</button>
+          <button type="button" id="#ffa500" class="btn btn-primary" onclick="color(this)">Orange</button>
+          <button type="button" id="#000000" class="btn btn-primary" onclick="color(this)">Black</button>
+          <button type="button" id="#ffffff" class="btn btn-primary" onclick="color(this)">Eraser</button>
+          <button type="button" id="2" class="btn btn-primary" onclick="width(this)">2</button>
+          <button type="button" id="5" class="btn btn-primary" onclick="width(this)">5</button>
+          <button type="button" id="10" class="btn btn-primary" onclick="width(this)">10</button>
+          <button type="button" id="15" class="btn btn-primary" onclick="width(this)">15</button>
+        </div>
+      </div>
+      <div class="container">
         <canvas id="can" width="400" height="400" style="position:absolute;top:10%;left:10%;border:2px solid;"></canvas>
-        <div style="position:absolute;top:12%;left:43%;">Choose Color</div>
-        <div style="position:absolute;top:15%;left:45%;width:10px;height:10px;background:green;" id="green" onclick="color(this)"></div>
-        <div style="position:absolute;top:15%;left:46%;width:10px;height:10px;background:blue;" id="blue" onclick="color(this)"></div>
-        <div style="position:absolute;top:15%;left:47%;width:10px;height:10px;background:red;" id="red" onclick="color(this)"></div>
-        <div style="position:absolute;top:17%;left:45%;width:10px;height:10px;background:yellow;" id="yellow" onclick="color(this)"></div>
-        <div style="position:absolute;top:17%;left:46%;width:10px;height:10px;background:orange;" id="orange" onclick="color(this)"></div>
-        <div style="position:absolute;top:17%;left:47%;width:10px;height:10px;background:black;" id="black" onclick="color(this)"></div>
-        <div style="position:absolute;top:20%;left:43%;">Eraser</div>
-        <div style="position:absolute;top:22%;left:45%;width:15px;height:15px;background:white;border:2px solid;" id="white" onclick="color(this)"></div>
         <img id="canvasimg" style="position:absolute;top:10%;left:52%;" style="display:none;">
-        <input type="button" value="save" id="btn" size="30" onclick="save()" style="position:absolute;top:55%;left:10%;">
-        <input type="button" value="clear" id="clr" size="23" onclick="erase()" style="position:absolute;top:55%;left:15%;">
+      </div>
+        <div class="container navbar-static-bottom footer">
+          <div class="btn-group">
+            <button type="button" id="#000000" class="btn btn-primary" onclick="save(this)">Save</button>
+            <button type="button" id="#ffffff" class="btn btn-primary" onclick="erase(this)">Erase</button>
+          </div>
+        </div>
     </body>
     </html>

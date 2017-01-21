@@ -61,7 +61,7 @@ function init() {
 
 function color(obj) {
     x = obj.id;
-    if (x == "#ffffff") y = 14;
+    if (x == "white") y = 14;
     else y = 2;
 }
 
@@ -175,10 +175,9 @@ function handleFiles(files) {
                     <div style="clear: both;"></div>
                     <div id="purple" onclick="color(this)" style="background:purple; width:50px; height:50px; float:left;"></div>
                     <div style="clear: both;"></div>
-                    <div id="black" onclick="color(this)" style="background:black; width:50px; height:50px;
-                    float:left; border: 1px;"></div>
+                    <div id="black" onclick="color(this)" style="background:black; width:50px; height:50px; float:left; border: 1px;"></div>
                     <div style="clear: both;"></div>
-                    <div id="white" onclick="color(this)" style="background:white; width:50px; height:50px; float:left;"></div>
+                    <div id="white" onclick="color(this)" style="background:white; width:50px; height:50px; float:left; border:1px solid black"></div>
                     <div style="clear: both;"></div>
                 </div>
             </div>
@@ -191,7 +190,7 @@ function handleFiles(files) {
                 <button type="button" id="#000000" class="btn btn-default" onclick="save(this)">Save</button>
                 <button type="button" id="#ffffff" class="btn btn-default" onclick="erase(this)">Erase</button>
                 <label class="btn btn-default btn-file">
-                        Choose Image <input type="file" id="input" style="display: none;" onchange="handleFiles(this.files)">
+                        Upload Image <input type="file" accept="image/*" style="display: none;" onchange="handleFiles(this.files)">
                 </label>
             </div>
         </div>

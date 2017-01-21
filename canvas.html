@@ -19,11 +19,19 @@
             staticCanvas = canvas;
         }
 
-
     </script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script>
+        function outputUpdate(width_num) {
+            document.querySelector('#width').value = width_num;
+            staticCanvas.freeDrawingBrush.width = width_num;
+        }
+    </script>
+
   </head>
   <body>
-        <div class="btn-group btn-block" style="display:inline-block;">
+        <div class="btn-group btn-block" style="display:inline-block;vertical-align:middle;">
 
         <div id="container" style="padding:5px 0px 0px 0px;">
             <div id="red" onclick="staticCanvas.freeDrawingBrush.color = '#ff0000'" style="background:red; width:50px; height:50px; float:left;"></div>
@@ -51,16 +59,24 @@
             <div style="clear: both;"></div> 
         </div>
         
+
         </div>
 
-        <div style="display: inline-block;">
-        <canvas id="sheet" width="400" height="400" style=" position:absolute; left:10%;border:2px solid;"></canvas>
+        <div style="display: inline-block; vertical-align:middle;">
+        <canvas id="sheet" width="500" height="500" style=" position:absolute; left:10%;border:2px solid;"></canvas>
         </div>
+
 
         <div class="container navbar-static-bottom footer">
             <div class="btn-group">
                 <button type="button" id="#000000" class="btn btn-primary" onclick="save(this)">Save</button>
                 <button type="button" id="#ffffff" class="btn btn-primary" onclick="erase(this)">Erase</button>
+                <label for="fader">Width</label>
+                <input type="range" min="5" max="50" value="5" id="fader" 
+                    step="1" oninput="outputUpdate(value)">
+                <output for="fader" id="width">5</output>
+
+
             </div>
         </div>
 

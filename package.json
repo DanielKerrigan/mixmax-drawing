@@ -1,21 +1,21 @@
 {
-  "name": "giphy-mixmax-app",
+  "name": "mixmax-drawing",
   "version": "0.0.1",
-  "description": "Giphy App for Mixmax",
+  "description": "Drawing App for Mixmax",
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mixmaxhq/giphy-mixmax-app.git"
+    "url": "git://github.com/DanielKerrigan/mixmax-drawing.git"
   },
-  "author": "Chanpory Rith <chanpory@mixmax.com> (https://mixmax.com/)",
+  "author": "ND Team at BoilerMake IV",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/mixmaxhq/giphy-mixmax-app/issues"
+    "url": "https://github.com/DanielKerrigan/mixmax-drawing/issues"
   },
-  "homepage": "https://github.com/mixmaxhq/giphy-mixmax-app",
+  "homepage": "https://github.com/DanielKerrigan/mixmax-drawing",
   "dependencies": {
     "body-parser": "^1.12.2",
     "cors": "^2.7.1",

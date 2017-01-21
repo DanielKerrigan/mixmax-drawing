@@ -40,6 +40,10 @@
         canvas.addEventListener("mouseout", function (e) {
             findxy('out', e)
         }, false);
+        var paramString = window.location.search;
+        var searchParams = new URLSearchParams(paramString);
+        var data = JSON.parse(searchParams.get("data"));
+        //canvas.drawImage(data["src"], 0, 0);
     }
 
     function color(obj) {

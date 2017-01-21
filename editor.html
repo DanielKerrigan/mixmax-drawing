@@ -58,6 +58,10 @@
         ctx.lineTo(currX, currY);
         ctx.strokeStyle = x;
         ctx.lineWidth = y;
+        for (var i=0;i<=y;i++){
+          ctx.arc(currX, currY, i, 0, 2*Math.PI);
+          ctx.stroke();
+        }
         ctx.stroke();
         ctx.closePath();
     }
@@ -92,7 +96,10 @@
                 ctx.beginPath();
                 ctx.fillStyle = x;
                 console.log(y)
-                ctx.fillRect(currX, currY, y, y);
+                for (var i=0;i<=y;i++){
+                  ctx.arc(currX, currY, i, 0, 2*Math.PI);
+                  ctx.stroke();
+                }
                 ctx.closePath();
                 dot_flag = false;
             }

@@ -42,7 +42,7 @@ app.get('/image/:key', function(req, res) {
     //       'Content-Length': img.length
     //   });
     //   res.end(img);
-      res.write("data:image/png;base64,"+dataURL);
+      res.write(dataURL);
   });
 });
 

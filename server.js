@@ -36,6 +36,7 @@ app.get('/image/:key', function(req, res) {
   var key = req.params.key;
   firebase.database().ref('/canvases/'+key).once('value').then(function(snapshot) {
       var dataURL = snapshot.val().dataURL;
+      console.log(dataURL);
       var img = new Buffer(dataURL, 'base64');
       res.writeHead(200, {
           'Content-Type': 'image/png',

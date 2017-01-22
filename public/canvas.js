@@ -53,7 +53,7 @@ function save() {
         .then(function() {
         Mixmax.done({src: key});
     }).catch(function(error) {
-        Mixmax.console.error(error);
+        console.log(error);
     });
 }
 

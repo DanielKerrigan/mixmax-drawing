@@ -1,14 +1,3 @@
-var firebase = require("firebase");
-var config = {
-  apiKey: "AIzaSyBUcax8rRvYAFhULkS_ASVB9or1poSRi4g",
-  authDomain: "mixmax-drawing.firebaseapp.com",
-  databaseURL: "https://mixmax-drawing.firebaseio.com",
-  storageBucket: "mixmax-drawing.appspot.com",
-  messagingSenderId: "219058818935"
-};
-firebase.initializeApp(config);
-
-
 module.exports = function(req, res) {
   console.log('req.body', req.body);
   var data = JSON.parse(req.body.params);

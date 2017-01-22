@@ -17,13 +17,9 @@ module.exports = function(req, res) {
     return;
   }
   // set the html that will be displayed
-  firebase.database().ref('/canvases/'+data.src).once('value').then(function(snapshot) {
-      var dataURL = snapshot.val().dataURL;
-      //var searchParams = new URLSearchParams();
-      //searchParams.append("data", data);
-      var html = "<a href=https://boilmake-drawapp.herokuapp.com/editor?data="+JSON.stringify(data)+">Edit</a> <img src="+dataURL+">";
-      res.json({
-        body: html
-      });
+  var base = "https://boilmake-drawapp.herokuapp.com/";
+  var html = "<a href="+base+"editor?data="+JSON.stringify(data)+">Edit</a> <img src="+base+"image/"+data.src+">";
+  res.json({
+    body: html
   });
 };

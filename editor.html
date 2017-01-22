@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Mixmax Canvas</title>
+    <!-- Mixmax SDK -->
+    <script defer src="https://d1xa36cy0xt122.cloudfront.net/v1/Mixmax.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
+    <script src="//code.jquery.com/jquery-2.1.3.min.js"></script>
+    <script type="text/javascript" src="/canvas.js"></script>
+  </head>
+
+  <body onload="init()">
+        <div class="btn-group btn-block" style="display:inline-block;vertical-align:middle;">
+
+        <div id="container" style="padding:0px 0px 0px 0px; border: 1px solid black">
+            <div id="red" onclick="color(this)" style="background:red; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="pink" onclick="color(this)" style="background:pink; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="fuchsia" onclick="color(this)" style="background:fuchsia; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="orange" onclick="color(this)" style="background:orange; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="yellow" onclick="color(this)" style="background:yellow; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="lime" onclick="color(this)" style="background:lime; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="green" onclick="color(this)" style="background:green; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="blue" onclick="color(this)" style="background:blue; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="purple" onclick="color(this)" style="background:purple; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="white" onclick="color(this)" style="background:white; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="black" onclick="color(this)" style="background:black; width:50px; height:50px; float:left;"></div>
+            <div style="clear: both;"></div>
+        </div>
+
+        </div>
+
+        <div style="display: inline-block; vertical-align:middle;">
+            <canvas id="sheet" width="500" height="500" style=" position:absolute; left:10%;border:1px solid black;"></canvas>
+        </div>
+
+        <div class="container navbar-static-bottom footer">
+            <div class="btn-group">
+                <button type="button" id="#000000" class="btn btn-primary" onclick="save(this)">Save</button>
+                <button type="button" id="#ffffff" class="btn btn-primary" onclick="erase(this)">Erase</button>
+                <label class="btn btn-default btn-file">
+                        Upload Image <input type="file" accept="image/*" style="display: none;" onchange="handleFiles(this.files)">
+                </label>
+                <label for="fader">Width</label>
+                <input type="range" min="1" max="50" value="5" id="fader" step="1" oninput="outputUpdate(value)">
+                <output for="fader" id="width">5</output>
+            </div>
+        </div>
+  </body>
+</html>

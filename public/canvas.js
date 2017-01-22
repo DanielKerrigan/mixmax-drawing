@@ -6,20 +6,28 @@ function init() {
     canvas.freeDrawingBrush.width = 5;
     canvas.freeDrawingBrush.color = "#ff0000";
 
-    // get the dataURL from the URL
+    // get the data from the URL
+    var data = getURLParams();
+    if(data) {
+        firebase.database().ref('/canvases/' + data.src).once('value').then(function(snapshot) {
+            var dataURL = snapshot.val().dataURL;
+            // load it into the canvas
+            var img = new Image();
+            img.onload = function() {
+                var fabricImage = new fabric.Image(img);
+                canvas.add(fabricImage);
+            };
+            img.src = dataURL;
+        });
+    }
+}
+
+function getURLParams(){
+    // get the data from the URL
     var paramString = window.location.search;
     var searchParams = new URLSearchParams(paramString);
     var data = JSON.parse(searchParams.get("data"));
-    if(data) {
-        var dataURL = data.src;
-        // load it into the canvas
-        var img = new Image();
-        img.onload = function() {
-            var fabricImage = new fabric.Image(img);
-            canvas.add(fabricImage);
-        };
-        img.src = dataURL;
-    }
+    return data;
 }
 
 function erase() {
@@ -30,8 +38,23 @@ function erase() {
 }
 
 function save() {
+    var data = getURLParams();
+    var key;
+    if(data) {
+        key = data.src;
+    } else {
+        key = firebase.database().ref().child('canvases').push().key;
+    }
     // call done and pass it the image url of the canvas
-    Mixmax.done({src: document.getElementById("sheet").fabric.toDataURL()});
+    updates = {};
+    updates['/canvases/'+key] = {dataURL: document.getElementById("sheet").fabric.toDataURL()};
+    firebase.database().ref()
+        .update(updates)
+        .then(function() {
+        Mixmax.done({src: key});
+    }).catch(function(error) {
+        Mixmax.console.error(error);
+    });
 }
 
 function color(obj) {

@@ -2,6 +2,19 @@
 <html>
   <head>
     <title>Mixmax Canvas</title>
+
+    <script src="https://www.gstatic.com/firebasejs/3.6.6/firebase.js"></script>
+    <script>
+      // Initialize Firebase
+      var config = {
+        apiKey: "AIzaSyBUcax8rRvYAFhULkS_ASVB9or1poSRi4g",
+        authDomain: "mixmax-drawing.firebaseapp.com",
+        databaseURL: "https://mixmax-drawing.firebaseio.com",
+        storageBucket: "mixmax-drawing.appspot.com",
+        messagingSenderId: "219058818935"
+      };
+      firebase.initializeApp(config);
+    </script>
     <!-- Mixmax SDK -->
     <script defer src="https://d1xa36cy0xt122.cloudfront.net/v1/Mixmax.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/fabric.js/1.4.0/fabric.min.js"></script>
@@ -12,7 +25,7 @@
   <body onload="init()">
         <div class="btn-group btn-block" style="display:inline-block;vertical-align:middle;">
 
-        <div id="container" style="padding:0px 0px 0px 0px; border: 1px solid black">
+        <div id="container" style="padding:0; border: 1px solid black">
             <div id="red" onclick="color(this)" style="background:red; width:50px; height:50px; float:left;"></div>
             <div style="clear: both;"></div>
             <div id="pink" onclick="color(this)" style="background:pink; width:50px; height:50px; float:left;"></div>
@@ -31,9 +44,9 @@
             <div style="clear: both;"></div>
             <div id="purple" onclick="color(this)" style="background:purple; width:50px; height:50px; float:left;"></div>
             <div style="clear: both;"></div>
-            <div id="black" onclick="color(this)" style="background:black; width:50px; height:50px; float:left;"></div>
-            <div style="clear: both;"></div>
             <div id="white" onclick="color(this)" style="background:white; width:49px; height:49px; float:left;"></div>
+            <div style="clear: both;"></div>
+            <div id="black" onclick="color(this)" style="background:black; width:50px; height:50px; float:left;"></div>
             <div style="clear: both;"></div>
         </div>
 

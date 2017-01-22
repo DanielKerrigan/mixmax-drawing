@@ -40,7 +40,8 @@ app.get('/image/:key', function(req, res) {
       var img = new Buffer(dataURL, 'base64');
       res.writeHead(200, {
           'Content-Type': 'image/png',
-          'Content-Length': img.length
+          'Content-Length': img.length,
+          'Cache-Control': 'no-cache'
       });
       res.end(img);
   });
